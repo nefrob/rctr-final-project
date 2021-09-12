@@ -57,7 +57,7 @@ npm start
 
 - `/wallet`:
 
-  <img src="design/WireframeWallet.png" alt="Wallet" width="550px" />
+  <img src="design/WireFrameWallet.png" alt="Wallet" width="550px" />
 
 [Uniswap V1](https://app.uniswap.org/#/swap) page for reference.
 
