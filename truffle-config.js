@@ -7,18 +7,18 @@ module.exports = {
   networks: {
     development: {
       network_id: "*",
-      host: 'localhost',
+      host: "localhost",
       port: 8545,
-      gas: 6721975,
-      gasPrice: 20000000000
-   }
+      // websockets: true, // fixme: for events?
+    },
   },
   compilers: {
     solc: {
-        optimizer: {
-          enabled: true,
-          runs: 200
-        }
-    }
- }
+      version: "0.8.7",
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
 };

@@ -1,0 +1,32 @@
+{
+  "name": "dapp",
+  "version": "1.0.0",
+  "description": "Swap",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.1",
+    "ganache-cli": "6.12.2",
+    "truffle": "5.4.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "truffle test",
+    "compile": "truffle compile --all",
+    "migrate": "truffle migrate --reset",
+    "ganache": "ganache-cli -e 5000 -a 2",
+    "ganache-det": "ganache-cli -e 5000 -d -a 2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nefrob/rctr-final-project.git"
+  },
+  "author": "Robert Neff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nefrob/rctr-final-project/issues"
+  },
+  "homepage": "https://github.com/nefrob/rctr-final-project#readme"
+}
