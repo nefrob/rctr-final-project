@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 
 import getWeb3 from "../utils/getWeb3";
 import Wallet from "./Wallet";
+import CustomTokenManager from "./CustomTokenManager";
 import "./App.css";
 
 export const Web3Context = createContext({ web3: null });
@@ -26,6 +27,7 @@ const App = () => {
             <h1>React DApp</h1>
             <Web3Context.Provider value={web3}>
                 <Wallet />
+                <CustomTokenManager tokens={[]} />
             </Web3Context.Provider>
         </div>
     );
