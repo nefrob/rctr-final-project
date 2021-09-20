@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 
-import "./styles.css";
-
-const CustomToken = (props) => {
+const TokenEntry = (props) => {
     const [inProgress, setInProgress] = useState(false);
 
     const addToken = async () => {
@@ -27,6 +25,8 @@ const CustomToken = (props) => {
             if (!wasAdded) {
                 setInProgress(false);
             }
+
+            // todo: display balance
         } catch (error) {
             console.log(error);
             setInProgress(false);
@@ -55,4 +55,4 @@ const CustomToken = (props) => {
     );
 };
 
-export default CustomToken;
+export default TokenEntry;

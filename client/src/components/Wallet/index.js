@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import { Web3Context } from "../App";
-import "./styles.css";
+import { AppContext } from "../App";
 
 const Wallet = () => {
     const [chainId, setChainId] = useState(false);
@@ -11,7 +10,7 @@ const Wallet = () => {
     });
     const [connectActive, setConnectActive] = useState(false);
 
-    const web3 = useContext(Web3Context);
+    const web3 = useContext(AppContext);
 
     const handleAccountsChanged = async (accounts) => {
         if (accounts.length === 0) {

@@ -1,13 +1,13 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 
-import { Web3Context } from "../App";
-import CustomToken from "./CustomToken";
+import { AppContext } from "../App";
+import TokenEntry from "./TokenEntry";
 import SampleToken1 from "../../contracts/SampleToken1.json";
 
 const CustomTokenManager = ({ tokens }) => {
     const [tokensList, setTokensList] = useState(tokens);
 
-    const web3 = useContext(Web3Context);
+    const web3 = useContext(AppContext);
 
     useEffect(() => {
         const getContract = async () => {
@@ -62,13 +62,15 @@ const CustomTokenManager = ({ tokens }) => {
     let tokenItems = tokensList.map((token, i) => {
         return (
             <li key={i}>
-                <CustomToken {...token} handleRemove={handleRemove} id={i} />
+                <TokenEntry {...token} handleRemove={handleRemove} id={i} />
             </li>
         );
     });
 
     return (
         <div className="CustomTokenManager">
+            <h1>Tokens List</h1>
+
             <div>Add token:</div>
             <form>
                 <input
@@ -85,7 +87,7 @@ const CustomTokenManager = ({ tokens }) => {
                 />
                 <input
                     ref={decimalsRef}
-                    type="text"
+                    type="number"
                     name="dec"
                     placeholder="Token decimals"
                 />
