@@ -1,3 +1,9 @@
 .App {
     padding-top: 30px;
+    /*margin-left: 25%;
+    width: 50%; */
+}
+
+.number-form {
+    font-family: monospace;
 }

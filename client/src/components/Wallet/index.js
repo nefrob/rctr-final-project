@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Button, Card } from "react-bootstrap";
 
 import { AppContext } from "../App";
+
+import WalletTable from "./WalletTable";
+
+import "./styles.css";
 
 const Wallet = () => {
     const [chainId, setChainId] = useState(false);
@@ -102,13 +107,31 @@ const Wallet = () => {
 
     return (
         <div className="Wallet">
-            <h1>MetaMask Account</h1>
-            <div>Address: {account.address}</div>
-            <div>Balance: {account.balance} ETH</div>
-            <button onClick={connectWallet} disabled={connectActive}>
-                Connect
-            </button>
-            <div>(Account can be switched in MetaMask)</div>
+            <Card>
+                <Card.Header>Wallet</Card.Header>
+                <Card.Body>
+                    <Card.Title>Account information:</Card.Title>
+                    <Card.Text>
+                        <div>
+                            Address: <code>{account.address}</code>
+                        </div>
+                        <div>
+                            ETH: <samp>{account.balance}</samp>
+                        </div>
+                    </Card.Text>
+                    <Button
+                        variant="primary"
+                        onClick={connectWallet}
+                        disabled={connectActive}
+                    >
+                        Connect
+                    </Button>
+                    <br />
+                    <br />
+                    <Card.Title>Token Balances:</Card.Title>
+                    <WalletTable tokens={[]} />
+                </Card.Body>
+            </Card>
         </div>
     );
 };

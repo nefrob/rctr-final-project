@@ -26,8 +26,8 @@ const Navigation = () => {
                         <Nav.Link as={Link} to="/swap">
                             Swap
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/liquidity">
-                            Liquidity
+                        <Nav.Link as={Link} to="/pool">
+                            Pool
                         </Nav.Link>
                         <Nav.Link as={Link} to="/wallet">
                             Wallet

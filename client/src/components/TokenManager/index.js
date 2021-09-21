@@ -1,8 +1,13 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
+import { Card } from "react-bootstrap";
 
 import { AppContext } from "../App";
 import TokenEntry from "./TokenEntry";
+import TokenForm from "./TokenForm";
+import TokenTable from "./TokenTable";
 import SampleToken1 from "../../contracts/SampleToken1.json";
+
+import "./styles.css";
 
 const CustomTokenManager = ({ tokens }) => {
     const [tokensList, setTokensList] = useState(tokens);
@@ -68,11 +73,34 @@ const CustomTokenManager = ({ tokens }) => {
     });
 
     return (
-        <div className="CustomTokenManager">
-            <h1>Tokens List</h1>
+        <div className="TokenManager">
+            <Card>
+                <Card.Header>Tokens</Card.Header>
+                <Card.Body>
+                    <Card.Title>Add Asset:</Card.Title>
+                    <TokenForm onSubmit={handleSubmit} disabled={false} />
+                    <br />
+                    <Card.Title>Registered Tokens:</Card.Title>
+                    <TokenTable
+                        tokens={[
+                            {
+                                name: "token 1",
+                                symbol: "tok1",
+                                address: "0x0",
+                                image: "null",
+                            },
+                            {
+                                name: "token 1",
+                                symbol: "tok1",
+                                address: "0x0",
+                                image: "null",
+                            },
+                        ]}
+                    />
+                </Card.Body>
+            </Card>
 
-            <div>Add token:</div>
-            <form>
+            {/* <form>
                 <input
                     ref={addressRef}
                     type="text"
@@ -100,10 +128,7 @@ const CustomTokenManager = ({ tokens }) => {
                 <button type="reset" onClick={handleSubmit}>
                     Submit
                 </button>
-            </form>
-
-            <div>Custom Tokens:</div>
-            {tokenItems}
+            </form> */}
         </div>
     );
 };

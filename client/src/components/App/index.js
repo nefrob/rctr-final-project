@@ -54,8 +54,8 @@ const App = () => {
                 <AppContext.Provider value={web3}>
                     <Switch>
                         <Route exact path="/" component={Home} />
-                        <Route path="/swap" render={Swap} />
-                        <Route path="/liquidity" render={Liquidity} />
+                        <Route path="/swap" component={Swap} />
+                        <Route path="/pool" component={Liquidity} />
                         <Route path="/wallet" component={Wallet} />
                         <Route
                             path="/tokens"
