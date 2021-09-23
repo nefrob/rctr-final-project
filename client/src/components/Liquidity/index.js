@@ -1,8 +1,6 @@
 import React from "react";
 import { Card, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 
-import "./styles.css";
-
 const Liquidity = () => {
     return (
         <div className="Liquidity">

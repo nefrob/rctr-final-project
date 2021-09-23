@@ -7,8 +7,6 @@ import TokenForm from "./TokenForm";
 import TokenTable from "./TokenTable";
 import SampleToken1 from "../../contracts/SampleToken1.json";
 
-import "./styles.css";
-
 const CustomTokenManager = ({ tokens }) => {
     const [tokensList, setTokensList] = useState(tokens);
 

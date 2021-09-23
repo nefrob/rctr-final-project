@@ -2,7 +2,6 @@ import React from "react";
 import { Card } from "react-bootstrap";
 
 // todo: description of site, link to git repo, resources/references
-import "./styles.css";
 
 const Home = () => {
     return (

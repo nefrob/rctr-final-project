@@ -5,8 +5,6 @@ import { AppContext } from "../App";
 
 import WalletTable from "./WalletTable";
 
-import "./styles.css";
-
 const Wallet = () => {
     const [chainId, setChainId] = useState(false);
     const [account, setAccount] = useState({

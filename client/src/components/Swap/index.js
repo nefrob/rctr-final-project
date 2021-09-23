@@ -1,8 +1,6 @@
 import React from "react";
 import { Button, Card, Form } from "react-bootstrap";
 
-import "./styles.css";
-
 const Swap = () => {
     return (
         <div className="Swap">

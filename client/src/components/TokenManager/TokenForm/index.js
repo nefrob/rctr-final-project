@@ -23,7 +23,7 @@ const TokenForm = ({ handleAdd, disabled }) => {
                         <InputGroup.Text id="basic-addon1">
                             <code>0x</code>
                         </InputGroup.Text>
-                        <Form.Control type="text" placeholder="Enter address" />
+                        <Form.Control type="text" placeholder="Address" />
                     </InputGroup>
                 </Form.Group>
                 <Form.Group as={Col}>
@@ -34,7 +34,7 @@ const TokenForm = ({ handleAdd, disabled }) => {
                     <Form.Label>Token Image</Form.Label>
                     <Form.Control type="text" placeholder="https://..." />
                 </Form.Group>
-                <Col xs={1}>
+                <Col>
                     <Button
                         variant="primary"
                         type="submit"
