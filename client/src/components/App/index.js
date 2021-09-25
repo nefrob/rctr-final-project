@@ -11,7 +11,6 @@ import Home from "../Home";
 import Swap from "../Swap";
 import Liquidity from "../Liquidity";
 import Wallet from "../Wallet";
-import TokenManager from "../TokenManager";
 
 import { getWeb3, getContract } from "../../utils/utils";
 
@@ -38,6 +37,11 @@ const App = () => {
                 };
             case "SET_ACCOUNT":
                 return { ...state, account: action.payload };
+            case "SET_ETH_BALANCE":
+                return {
+                    ...state,
+                    account: { ...state.account, balance: action.payload },
+                };
             case "SET_TOKEN_BALANCE":
                 return {
                     ...state,
@@ -170,7 +174,6 @@ const App = () => {
                         <Route path="/swap" component={Swap} />
                         <Route path="/pool" component={Liquidity} />
                         <Route path="/wallet" component={Wallet} />
-                        <Route path="/tokens" component={TokenManager} />
                         <Redirect to="/" />
                     </Switch>
                 </AppContext.Provider>

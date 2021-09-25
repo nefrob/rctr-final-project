@@ -33,9 +33,6 @@ const Navigation = () => {
                         <Nav.Link as={Link} to="/wallet">
                             Wallet
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/tokens">
-                            Tokens
-                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
