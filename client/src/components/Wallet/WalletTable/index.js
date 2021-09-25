@@ -11,6 +11,9 @@ const WalletTable = ({ tokens }) => {
                 </td>
                 <td>{token.symbol}</td>
                 <td>
+                    <code>{token.address}</code>
+                </td>
+                <td>
                     <samp>{token.balance}</samp>
                 </td>
             </tr>
@@ -23,6 +26,7 @@ const WalletTable = ({ tokens }) => {
                 <tr>
                     <th>Token</th>
                     <th>Symbol</th>
+                    <th>Address</th>
                     <th>Balance</th>
                 </tr>
             </thead>

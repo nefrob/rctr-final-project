@@ -4,6 +4,7 @@ import { Button, Card } from "react-bootstrap";
 import { AppContext } from "../App";
 
 import WalletTable from "./WalletTable";
+import AddTokenForm from "./AddTokenForm";
 
 const Wallet = () => {
     const [state, dispatch] = useContext(AppContext);
@@ -12,10 +13,11 @@ const Wallet = () => {
     );
     const [gettingBalances, setGetttingBalances] = useState(false);
     const [tokenBalances, setTokenBalances] = useState([]);
+    const [addingToken, setAddingToken] = useState(false);
 
     useEffect(() => {
         setAccountConnected(state.account.address !== "0x0");
-        getTokenBalances();
+        getBalances();
     }, [state.account.address]);
 
     const connectWallet = async () => {
@@ -30,7 +32,7 @@ const Wallet = () => {
         }
     };
 
-    const getTokenBalances = async () => {
+    const getBalances = async () => {
         if (state.account.address === "0x0") {
             setTokenBalances([]);
             return;
@@ -40,23 +42,69 @@ const Wallet = () => {
 
         setGetttingBalances(true);
 
+        const ethBalance = await state.web3.eth.getBalance(
+            state.account.address
+        );
+        dispatch({
+            type: "SET_ETH_BALANCE",
+            payload: state.web3.utils.fromWei(ethBalance),
+        });
+
         const tokenBalances = [];
 
         for (const symbol in state.tokens) {
             const token = state.tokens[symbol];
-            const balance = await token.contract.methods
+            let balance = await token.contract.methods
                 .balanceOf(state.account.address)
                 .call();
+            balance = state.web3.utils.fromWei(balance);
+
+            dispatch({
+                type: "SET_TOKEN_BALANCE",
+                payload: { symbol, balance },
+            });
 
             tokenBalances.push({
                 symbol: symbol,
                 image: token.image,
-                balance: state.web3.utils.fromWei(balance),
+                address: token.contract._address,
+                balance: balance,
             });
         }
 
         setTokenBalances(tokenBalances);
         setGetttingBalances(false);
+    };
+
+    const handleTokenAdd = async (newToken) => {
+        try {
+            setAddingToken(true);
+
+            if (newToken.address[0] !== "0" && newToken.address[1] !== "x") {
+                newToken.address = "0x" + newToken.address;
+            }
+
+            const wasAdded = await window.ethereum.request({
+                method: "wallet_watchAsset",
+                params: {
+                    type: "ERC20",
+                    options: {
+                        address: newToken.address,
+                        symbol: newToken.symbol,
+                        decimals: 18,
+                        image: newToken.image,
+                    },
+                },
+            });
+
+            if (!wasAdded) {
+                console.log("Token not added to MetaMask wallet.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        setAddingToken(false);
     };
 
     return (
@@ -82,13 +130,22 @@ const Wallet = () => {
                     <Button
                         className="mb-2"
                         variant="secondary"
-                        onClick={getTokenBalances}
+                        onClick={getBalances}
                         disabled={gettingBalances || !accountConnected}
                     >
                         Refresh
                     </Button>
                     <Card.Title>Token Balances:</Card.Title>
                     <WalletTable tokens={tokenBalances} />
+                    <Card.Title>Add Asset:</Card.Title>
+                    <Card.Text className="text-muted">
+                        (Adds to conected MetaMask wallet, not to the
+                        application)
+                    </Card.Text>
+                    <AddTokenForm
+                        handleAdd={handleTokenAdd}
+                        disabled={addingToken || !accountConnected}
+                    />
                 </Card.Body>
             </Card>
         </div>
