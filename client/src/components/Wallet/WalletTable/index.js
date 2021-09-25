@@ -7,11 +7,11 @@ const WalletTable = ({ tokens }) => {
             <tr key={index}>
                 <td>
                     {" "}
-                    <img src={tokens.image} alt={tokens.symbol} /> {tokens.name}
+                    <img src={token.image} alt={token.symbol} />
                 </td>
-                <td>{tokens.symbol}</td>
+                <td>{token.symbol}</td>
                 <td>
-                    <samp>{tokens.balance}</samp>
+                    <samp>{token.balance}</samp>
                 </td>
             </tr>
         );

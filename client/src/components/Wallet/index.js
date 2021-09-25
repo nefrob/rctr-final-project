@@ -6,101 +6,57 @@ import { AppContext } from "../App";
 import WalletTable from "./WalletTable";
 
 const Wallet = () => {
-    const [chainId, setChainId] = useState(false);
-    const [account, setAccount] = useState({
-        address: "0x0",
-        balance: 0,
-    });
-    const [connectActive, setConnectActive] = useState(false);
-
-    const web3 = useContext(AppContext);
-
-    const handleAccountsChanged = async (accounts) => {
-        if (accounts.length === 0) {
-            console.log("No account found");
-
-            setAccount({
-                address: "0x0",
-                balance: 0,
-            });
-
-            setConnectActive(false);
-        } else if (account.address !== accounts[0]) {
-            console.log("Account changed");
-            console.log(accounts);
-
-            const balance = await updateBalance(accounts[0]);
-
-            setAccount({
-                address: accounts[0],
-                balance: balance,
-            });
-        } else {
-            console.log("Account not changed?");
-        }
-    };
-
-    const handleChainIdChanged = (chainId) => {
-        console.log("Chain changed to", chainId);
-        window.location.reload();
-    };
-
-    const handleDisconnect = (error) => {
-        console.error(error);
-        alert("MetaMask disconnect from network.");
-        window.location.reload();
-    };
-
-    const updateBalance = async (address) => {
-        console.log("Getting balance");
-        const balance = await web3.eth.getBalance(address);
-        return web3.utils.fromWei(balance);
-    };
-
-    const initWallet = async () => {
-        console.log("Initialize wallet");
-
-        try {
-            setChainId(
-                await window.ethereum.request({
-                    method: "eth_chainId",
-                })
-            );
-            window.ethereum.on("chainChanged", handleChainIdChanged);
-
-            await window.ethereum
-                .request({ method: "eth_accounts" })
-                .then((accounts) => {
-                    setConnectActive(true); // initial connection
-                    handleAccountsChanged(accounts);
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-
-            window.ethereum.on("accountsChanged", handleAccountsChanged);
-
-            window.ethereum.on("disconnect", handleDisconnect);
-        } catch (error) {
-            alert("Failed to load web3 or accounts.");
-            console.error(error);
-        }
-    };
+    const [state, dispatch] = useContext(AppContext);
+    const [accountConnected, setAccountConnected] = useState(
+        state.account.address !== "0x0"
+    );
+    const [gettingBalances, setGetttingBalances] = useState(false);
+    const [tokenBalances, setTokenBalances] = useState([]);
 
     useEffect(() => {
-        initWallet();
-    }, []);
+        setAccountConnected(state.account.address !== "0x0");
+        getTokenBalances();
+    }, [state.account.address]);
 
     const connectWallet = async () => {
         console.log("Connect wallet");
-        setConnectActive(true);
+        setAccountConnected(true);
 
         try {
             await window.ethereum.request({ method: "eth_requestAccounts" });
         } catch (error) {
             console.error(error);
-            setConnectActive(false);
+            setAccountConnected(false);
         }
+    };
+
+    const getTokenBalances = async () => {
+        if (state.account.address === "0x0") {
+            setTokenBalances([]);
+            return;
+        }
+
+        console.log("Getting token balances");
+
+        setGetttingBalances(true);
+
+        const tokenBalances = [];
+
+        for (const symbol in state.tokens) {
+            const token = state.tokens[symbol];
+            const balance = await token.contract.methods
+                .balanceOf(state.account.address)
+                .call();
+
+            tokenBalances.push({
+                symbol: symbol,
+                image: token.image,
+                balance: state.web3.utils.fromWei(balance),
+            });
+        }
+
+        setTokenBalances(tokenBalances);
+        setGetttingBalances(false);
     };
 
     return (
@@ -110,24 +66,29 @@ const Wallet = () => {
                 <Card.Body>
                     <Card.Title>Account information:</Card.Title>
                     <Card.Text>
-                        <div>
-                            Address: <code>{account.address}</code>
-                        </div>
-                        <div>
-                            ETH: <samp>{account.balance}</samp>
-                        </div>
+                        Address: <code>{state.account.address}</code>
+                        <br />
+                        ETH: <samp>{state.account.balance}</samp>
                     </Card.Text>
                     <Button
+                        className="mb-2"
                         variant="primary"
                         onClick={connectWallet}
-                        disabled={connectActive}
+                        disabled={accountConnected}
                     >
                         Connect
                     </Button>
                     <br />
-                    <br />
+                    <Button
+                        className="mb-2"
+                        variant="secondary"
+                        onClick={getTokenBalances}
+                        disabled={gettingBalances || !accountConnected}
+                    >
+                        Refresh
+                    </Button>
                     <Card.Title>Token Balances:</Card.Title>
-                    <WalletTable tokens={[]} />
+                    <WalletTable tokens={tokenBalances} />
                 </Card.Body>
             </Card>
         </div>
