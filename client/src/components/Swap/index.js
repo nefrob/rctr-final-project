@@ -46,9 +46,6 @@ const Swap = () => {
                                 ~1 Token = X USD
                             </Form.Text>
                         </Form.Group>
-                        <Form.Text className="text-muted">
-                            1 Token = X ETH
-                        </Form.Text>
                     </Form>
                     <Button
                         variant="primary"

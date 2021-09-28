@@ -8,6 +8,7 @@ import AddTokenForm from "./AddTokenForm";
 
 const Wallet = () => {
     const [state, dispatch] = useContext(AppContext);
+
     const [accountConnected, setAccountConnected] = useState(
         state.account.address !== "0x0"
     );
@@ -139,7 +140,7 @@ const Wallet = () => {
                     <WalletTable tokens={tokenBalances} />
                     <Card.Title>Add Asset:</Card.Title>
                     <Card.Text className="text-muted">
-                        (Adds to conected MetaMask wallet, not to the
+                        (Adds to connected MetaMask wallet, not to the
                         application)
                     </Card.Text>
                     <AddTokenForm

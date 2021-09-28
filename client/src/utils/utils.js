@@ -13,13 +13,14 @@ export const getWeb3 = async () => {
     }
 };
 
-export const getContract = async (contractJson) => {
+export const getContract = async (contractJson, addr = null) => {
     try {
         const networkId = await window.web3.eth.net.getId();
         const deployedNetwork = contractJson.networks[networkId];
+        const address = addr === null ? deployedNetwork.address : addr;
         const instance = new window.web3.eth.Contract(
             contractJson.abi,
-            deployedNetwork && deployedNetwork.address
+            deployedNetwork && address
         );
 
         return instance;

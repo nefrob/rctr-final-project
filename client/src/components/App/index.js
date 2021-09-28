@@ -4,7 +4,7 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import SampleToken1 from "../../contracts/SampleToken1.json";
 import SampleToken2 from "../../contracts/SampleToken2.json";
 import Factory from "../../contracts/Factory.json";
-// import Exchange from "../../contracts/Exchange.json";
+import Exchange from "../../contracts/Exchange.json";
 
 import Navigation from "../Navigation";
 import Home from "../Home";
@@ -21,8 +21,6 @@ export const AppContext = createContext();
 const App = () => {
     const appReducer = (state, action) => {
         switch (action.type) {
-            case "SET_EXCHANGE":
-                return { ...state, exchange: action.payload };
             case "SET_FACTORY":
                 return { ...state, factory: action.payload };
             case "ADD_TOKEN":
@@ -31,6 +29,14 @@ const App = () => {
                     tokens: {
                         ...state.tokens,
                         ...action.payload,
+                    },
+                };
+            case "ADD_EXCHANGE":
+                return {
+                    ...state,
+                    exchanges: {
+                        ...state.exchanges,
+                        [action.payload.token]: action.payload.contract,
                     },
                 };
             case "SET_ACCOUNT":
@@ -59,9 +65,9 @@ const App = () => {
     const [loading, setLoading] = useState(true);
 
     const [state, dispatch] = useReducer(appReducer, {
-        exchange: null,
         factory: null,
         tokens: {},
+        exchanges: {},
         account: { address: "0x0", balance: 0 },
     });
 
@@ -106,24 +112,46 @@ const App = () => {
         const initState = async () => {
             await getWeb3();
 
-            // const exchange = await getContract(Exchange);
-            // dispatch({ type: "SET_EXCHANGE", payload: exchange });
+            console.log("Getting contracts");
+
             const factory = await getContract(Factory);
             dispatch({ type: "SET_FACTORY", payload: factory });
 
             const tokens = [SampleToken1, SampleToken2];
-            for (const token of tokens) {
-                const contract = await getContract(token);
-                const symbol = await contract.methods.symbol().call();
+            for (const tokenJson of tokens) {
+                const token = await getContract(tokenJson);
+                const symbol = await token.methods.symbol().call();
                 dispatch({
                     type: "ADD_TOKEN",
                     payload: {
                         [symbol]: {
-                            contract: contract,
+                            contract: token,
                             symbol: symbol,
                             image: null, // todo: image url!
                             balance: 0,
                         },
+                    },
+                });
+
+                const exchangeAddress = await factory.methods
+                    .getExchange(token._address)
+                    .call();
+
+                if (
+                    exchangeAddress ===
+                    " 0x0000000000000000000000000000000000000000"
+                ) {
+                    console.error("Exchange wasn't created during deploy?");
+                }
+
+                const exchange = await getContract(Exchange, exchangeAddress);
+                exchange._address = exchangeAddress;
+
+                dispatch({
+                    type: "ADD_EXCHANGE",
+                    payload: {
+                        token: symbol,
+                        contract: exchange,
                     },
                 });
             }
