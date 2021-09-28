@@ -21,8 +21,6 @@ export const AppContext = createContext();
 const App = () => {
     const appReducer = (state, action) => {
         switch (action.type) {
-            case "SET_WEB3":
-                return { ...state, web3: action.payload };
             case "SET_EXCHANGE":
                 return { ...state, exchange: action.payload };
             case "SET_FACTORY":
@@ -61,7 +59,6 @@ const App = () => {
     const [loading, setLoading] = useState(true);
 
     const [state, dispatch] = useReducer(appReducer, {
-        web3: null,
         exchange: null,
         factory: null,
         tokens: {},
@@ -107,17 +104,16 @@ const App = () => {
 
     useEffect(() => {
         const initState = async () => {
-            const web3 = await getWeb3();
-            dispatch({ type: "SET_WEB3", payload: web3 });
+            await getWeb3();
 
-            // const exchange = await getContract(Exchange, web3);
+            // const exchange = await getContract(Exchange);
             // dispatch({ type: "SET_EXCHANGE", payload: exchange });
-            const factory = await getContract(Factory, web3);
+            const factory = await getContract(Factory);
             dispatch({ type: "SET_FACTORY", payload: factory });
 
             const tokens = [SampleToken1, SampleToken2];
             for (const token of tokens) {
-                const contract = await getContract(token, web3);
+                const contract = await getContract(token);
                 const symbol = await contract.methods.symbol().call();
                 dispatch({
                     type: "ADD_TOKEN",

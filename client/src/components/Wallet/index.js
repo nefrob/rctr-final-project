@@ -42,12 +42,12 @@ const Wallet = () => {
 
         setGetttingBalances(true);
 
-        const ethBalance = await state.web3.eth.getBalance(
+        const ethBalance = await window.web3.eth.getBalance(
             state.account.address
         );
         dispatch({
             type: "SET_ETH_BALANCE",
-            payload: state.web3.utils.fromWei(ethBalance),
+            payload: window.web3.utils.fromWei(ethBalance),
         });
 
         const tokenBalances = [];
@@ -57,7 +57,7 @@ const Wallet = () => {
             let balance = await token.contract.methods
                 .balanceOf(state.account.address)
                 .call();
-            balance = state.web3.utils.fromWei(balance);
+            balance = window.web3.utils.fromWei(balance);
 
             dispatch({
                 type: "SET_TOKEN_BALANCE",

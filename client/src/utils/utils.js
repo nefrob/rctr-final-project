@@ -3,7 +3,7 @@ import Web3 from "web3";
 export const getWeb3 = async () => {
     if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
-        window.web3 = web3; // fixme: remove
+        window.web3 = web3;
         return web3;
     } else {
         alert(
@@ -13,11 +13,11 @@ export const getWeb3 = async () => {
     }
 };
 
-export const getContract = async (contractJson, web3) => {
+export const getContract = async (contractJson) => {
     try {
-        const networkId = await web3.eth.net.getId();
+        const networkId = await window.web3.eth.net.getId();
         const deployedNetwork = contractJson.networks[networkId];
-        const instance = new web3.eth.Contract(
+        const instance = new window.web3.eth.Contract(
             contractJson.abi,
             deployedNetwork && deployedNetwork.address
         );
