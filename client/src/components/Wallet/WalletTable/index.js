@@ -2,16 +2,18 @@ import React from "react";
 import { Table } from "react-bootstrap";
 
 const WalletTable = ({ tokens }) => {
-    const tokenList = tokens.map((token, index) => {
+    const tokenList = Object.keys(tokens).map((symbol, index) => {
+        const token = tokens[symbol];
+
         return (
             <tr key={index}>
                 <td>
                     {" "}
-                    <img src={token.image} alt={token.symbol} />
+                    <img class="token-logo" src={token.image} alt={symbol} />
                 </td>
-                <td>{token.symbol}</td>
+                <td>{symbol}</td>
                 <td>
-                    <code>{token.address}</code>
+                    <code>{token.contract._address}</code>
                 </td>
                 <td>
                     <samp>{token.balance}</samp>

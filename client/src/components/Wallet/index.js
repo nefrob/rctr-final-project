@@ -1,79 +1,57 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Button, Card } from "react-bootstrap";
+import React, { useState, useContext, useEffect } from "react";
+import { Alert, Button, Card, Form } from "react-bootstrap";
 
 import { AppContext } from "../App";
 
 import WalletTable from "./WalletTable";
 import AddTokenForm from "./AddTokenForm";
 
+import { fromWei } from "../../utils/utils";
+
 const Wallet = () => {
     const [state, dispatch] = useContext(AppContext);
 
-    const [accountConnected, setAccountConnected] = useState(
-        state.account.address !== "0x0"
-    );
+    const [connectingAccount, setConnectingAccount] = useState(false);
     const [gettingBalances, setGetttingBalances] = useState(false);
-    const [tokenBalances, setTokenBalances] = useState([]);
     const [addingToken, setAddingToken] = useState(false);
-
-    useEffect(() => {
-        setAccountConnected(state.account.address !== "0x0");
-        getBalances();
-    }, [state.account.address]);
 
     const connectWallet = async () => {
         console.log("Connect wallet");
-        setAccountConnected(true);
+        setConnectingAccount(true);
 
         try {
             await window.ethereum.request({ method: "eth_requestAccounts" });
         } catch (error) {
             console.error(error);
-            setAccountConnected(false);
         }
+
+        setConnectingAccount(false);
     };
 
     const getBalances = async () => {
         if (state.account.address === "0x0") {
-            setTokenBalances([]);
             return;
         }
 
         console.log("Getting token balances");
 
         setGetttingBalances(true);
-
         const ethBalance = await window.web3.eth.getBalance(
             state.account.address
         );
-        dispatch({
-            type: "SET_ETH_BALANCE",
-            payload: window.web3.utils.fromWei(ethBalance),
-        });
-
-        const tokenBalances = [];
+        dispatch({ type: "SET_ETH_BALANCE", payload: fromWei(ethBalance) });
 
         for (const symbol in state.tokens) {
-            const token = state.tokens[symbol];
-            let balance = await token.contract.methods
+            const tokenBalance = await state.tokens[symbol].contract.methods
                 .balanceOf(state.account.address)
                 .call();
-            balance = window.web3.utils.fromWei(balance);
 
             dispatch({
                 type: "SET_TOKEN_BALANCE",
-                payload: { symbol, balance },
-            });
-
-            tokenBalances.push({
-                symbol: symbol,
-                image: token.image,
-                address: token.contract._address,
-                balance: balance,
+                payload: { symbol: symbol, balance: fromWei(tokenBalance) },
             });
         }
 
-        setTokenBalances(tokenBalances);
         setGetttingBalances(false);
     };
 
@@ -123,30 +101,52 @@ const Wallet = () => {
                         className="mb-2"
                         variant="primary"
                         onClick={connectWallet}
-                        disabled={accountConnected}
+                        disabled={
+                            state.account.address !== "0x0" || connectingAccount
+                        }
                     >
                         Connect
                     </Button>
                     <br />
+
                     <Button
                         className="mb-2"
                         variant="secondary"
                         onClick={getBalances}
-                        disabled={gettingBalances || !accountConnected}
+                        disabled={
+                            gettingBalances ||
+                            state.account.address === "0x0" ||
+                            connectingAccount
+                        }
                     >
                         Refresh
                     </Button>
                     <Card.Title>Token Balances:</Card.Title>
-                    <WalletTable tokens={tokenBalances} />
+                    <WalletTable
+                        tokens={
+                            state.account.address === "0x0" ? {} : state.tokens
+                        }
+                    />
+
                     <Card.Title>Add Asset:</Card.Title>
                     <Card.Text className="text-muted">
                         (Adds to connected MetaMask wallet, not to the
                         application)
                     </Card.Text>
-                    <AddTokenForm
-                        handleAdd={handleTokenAdd}
-                        disabled={addingToken || !accountConnected}
-                    />
+                    {state.account.address === "0x0" ? (
+                        <Alert variant="warning">
+                            You must connect a wallet before using this feature.
+                        </Alert>
+                    ) : (
+                        <AddTokenForm
+                            handleAdd={handleTokenAdd}
+                            disabled={
+                                addingToken ||
+                                state.account.address === "0x0" ||
+                                connectingAccount
+                            }
+                        />
+                    )}
                 </Card.Body>
             </Card>
         </div>

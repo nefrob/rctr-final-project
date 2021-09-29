@@ -29,3 +29,7 @@ export const getContract = async (contractJson, addr = null) => {
         return null;
     }
 };
+
+export const toWei = (eth) => window.web3.utils.toWei(eth.toString());
+
+export const fromWei = (wei) => window.web3.utils.fromWei(wei);

@@ -12,7 +12,9 @@ import Swap from "../Swap";
 import Liquidity from "../Liquidity";
 import Wallet from "../Wallet";
 
-import { getWeb3, getContract } from "../../utils/utils";
+import tokenLogo from "../../assets/img/erc20.png";
+
+import { getWeb3, getContract, fromWei } from "../../utils/utils";
 
 import "./styles.css";
 
@@ -79,12 +81,22 @@ const App = () => {
                 type: "SET_ACCOUNT",
                 payload: { address: "0x0", balance: 0 },
             });
+
+            for (const symbol of Object.keys(state.tokens)) {
+                dispatch({
+                    type: "SET_TOKEN_BALANCE",
+                    payload: {
+                        symbol,
+                        balance: 0,
+                    },
+                });
+            }
         } else if (state.account.address !== accounts[0]) {
             console.log("Account changed");
             console.log(accounts);
 
-            console.log("Getting balance");
-            const balance = window.web3.utils.fromWei(
+            console.log("Getting balances");
+            const balance = fromWei(
                 await window.web3.eth.getBalance(accounts[0])
             );
 
@@ -92,6 +104,20 @@ const App = () => {
                 type: "SET_ACCOUNT",
                 payload: { address: accounts[0], balance },
             });
+
+            for (const symbol of Object.keys(state.tokens)) {
+                const tokenBalance = await state.tokens[symbol].contract.methods
+                    .balanceOf(state.account.address)
+                    .call();
+
+                dispatch({
+                    type: "SET_TOKEN_BALANCE",
+                    payload: {
+                        symbol,
+                        balance: fromWei(tokenBalance),
+                    },
+                });
+            }
         } else {
             console.log("Account not changed?");
         }
@@ -121,13 +147,14 @@ const App = () => {
             for (const tokenJson of tokens) {
                 const token = await getContract(tokenJson);
                 const symbol = await token.methods.symbol().call();
+
                 dispatch({
                     type: "ADD_TOKEN",
                     payload: {
                         [symbol]: {
                             contract: token,
                             symbol: symbol,
-                            image: null, // todo: image url!
+                            image: tokenLogo,
                             balance: 0,
                         },
                     },
