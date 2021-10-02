@@ -92,10 +92,8 @@ const App = () => {
                 });
             }
         } else if (state.account.address !== accounts[0]) {
-            console.log("Account changed");
-            console.log(accounts);
+            console.log("Account changed", accounts);
 
-            console.log("Getting balances");
             const balance = fromWei(
                 await window.web3.eth.getBalance(accounts[0])
             );
@@ -143,10 +141,39 @@ const App = () => {
             const factory = await getContract(Factory);
             dispatch({ type: "SET_FACTORY", payload: factory });
 
+            console.log("Initialize wallet triggers");
+            let address = "0x0";
+            try {
+                window.ethereum.on("chainChanged", handleChainIdChanged);
+
+                await window.ethereum
+                    .request({ method: "eth_accounts" })
+                    .then((accounts) => {
+                        address = accounts.length === 0 ? "0x0" : accounts[0];
+                        handleAccountsChanged(accounts);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+
+                window.ethereum.on("accountsChanged", handleAccountsChanged);
+                window.ethereum.on("disconnect", handleDisconnect);
+            } catch (error) {
+                alert("Failed to load account.");
+                console.error(error);
+            }
+
             const tokens = [SampleToken1, SampleToken2];
             for (const tokenJson of tokens) {
                 const token = await getContract(tokenJson);
                 const symbol = await token.methods.symbol().call();
+
+                let tokenBalance = 0;
+                if (address !== "0x0") {
+                    tokenBalance = fromWei(
+                        await token.methods.balanceOf(address).call()
+                    );
+                }
 
                 dispatch({
                     type: "ADD_TOKEN",
@@ -155,7 +182,7 @@ const App = () => {
                             contract: token,
                             symbol: symbol,
                             image: tokenLogo,
-                            balance: 0,
+                            balance: tokenBalance,
                         },
                     },
                 });
@@ -181,27 +208,6 @@ const App = () => {
                         contract: exchange,
                     },
                 });
-            }
-
-            console.log("Initialize wallet triggers");
-
-            try {
-                window.ethereum.on("chainChanged", handleChainIdChanged);
-
-                await window.ethereum
-                    .request({ method: "eth_accounts" })
-                    .then((accounts) => {
-                        handleAccountsChanged(accounts);
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    });
-
-                window.ethereum.on("accountsChanged", handleAccountsChanged);
-                window.ethereum.on("disconnect", handleDisconnect);
-            } catch (error) {
-                alert("Failed to load account.");
-                console.error(error);
             }
 
             setLoading(false);
