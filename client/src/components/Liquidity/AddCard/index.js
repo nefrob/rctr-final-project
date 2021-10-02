@@ -75,6 +75,7 @@ const AddCard = () => {
         tokenRef.current.value = 0;
 
         setInProgress(false);
+        setChosenToken("");
     };
 
     const handleTokenPick = (e) => {
@@ -84,6 +85,7 @@ const AddCard = () => {
     useEffect(() => {
         const updatePoolSize = async () => {
             if (chosenToken === "" || state.account.address === "0x0") {
+                setPoolSize({ eth: 0, tokens: 0 });
                 return;
             }
 
@@ -119,7 +121,7 @@ const AddCard = () => {
                             value={chosenToken}
                             onChange={handleTokenPick}
                         >
-                            <option value="none" hidden>
+                            <option value="" hidden>
                                 Select a token
                             </option>
                             {tokenOptions}
@@ -145,7 +147,10 @@ const AddCard = () => {
                             <samp>{poolSize.tokens}</samp> Tokens
                         </Form.Text>
                     </Form.Group>
-                    <Button onClick={handleSubmit} disabled={inProgress}>
+                    <Button
+                        onClick={handleSubmit}
+                        disabled={inProgress || chosenToken === ""}
+                    >
                         Supply
                     </Button>
                 </Card.Body>

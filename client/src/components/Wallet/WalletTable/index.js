@@ -9,7 +9,11 @@ const WalletTable = ({ tokens }) => {
             <tr key={index}>
                 <td>
                     {" "}
-                    <img class="token-logo" src={token.image} alt={symbol} />
+                    <img
+                        className="token-logo"
+                        src={token.image}
+                        alt={symbol}
+                    />
                 </td>
                 <td>{symbol}</td>
                 <td>

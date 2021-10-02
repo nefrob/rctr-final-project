@@ -8,6 +8,8 @@ A [Uniswap V1](https://github.com/Uniswap/uniswap-v1) clone for decentralized au
 
 TODO: [CodeSandbox Link]() to be added for frontend when completed.
 
+Disclaimer: static, i.e. can't add new tokens/exchanges on frontend
+
 ## Setup
 
 TODO: update as project proceeds.
@@ -50,6 +52,8 @@ TODO: update as project proceeds.
     npm install
     npm start
     ```
+
+-   Note: MetaMask ganache account will need to be reset every time ganache is restarted to clear the old test transaction history.
 
 ## Design
 

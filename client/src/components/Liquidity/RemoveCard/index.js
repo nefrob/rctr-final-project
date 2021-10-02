@@ -49,7 +49,7 @@ const RemoveCard = () => {
                 .call();
 
             const lpBalance = fromWei(rawLpBalance);
-            if (lpBalance == 0) {
+            if (lpBalance === "0") {
                 setLpExchangeRate({
                     eth: 0,
                     tokens: 0,
@@ -172,7 +172,10 @@ const RemoveCard = () => {
                             LP available: <samp>{lpBalance}</samp> DREAM
                         </Form.Text>
                     </Form.Group>
-                    <Button onClick={handleSubmit} disabled={inProgress}>
+                    <Button
+                        onClick={handleSubmit}
+                        disabled={inProgress || chosenToken === ""}
+                    >
                         Remove
                     </Button>
                 </Card.Body>
