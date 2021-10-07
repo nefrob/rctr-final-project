@@ -1,8 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 
-// todo: description of site, link to git repo, resources/references
-
 const Home = () => {
     return (
         <div className="Home">
@@ -10,16 +8,22 @@ const Home = () => {
                 <Card.Header>Sandman Swap</Card.Header>
                 <Card.Body>
                     <Card.Title>Welcome!</Card.Title>
-                    <Card.Text>Pending project description...</Card.Text>
                     <Card.Text>
-                        Please link your wallet on the "Wallet" page to start
-                        swapping!
+                        This website presents a simple React interface to
+                        interact with ETH/token swapping smart contracts on the
+                        Ethereum blockchain. With a connected browser wallet
+                        (ex. MetaMask) a user can provide/remove liquidity, and
+                        exchange between ETH and tokens using these liquidity
+                        pools.
                     </Card.Text>
-                    <Card.Title>Links:</Card.Title>
-                    <a href="https://github.com/nefrob/rctr-final-project">
+                    <Card.Text>
+                        To start, please link your browser wallet on the{" "}
+                        <b>Wallet</b> page.
+                    </Card.Text>
+                    <a href="https://github.com/nefrob/sandman-swap">
                         GitHub Repository
-                    </a>
-                    <br />
+                    </a>{" "}
+                    |{" "}
                     <a href="https://hackmd.io/@HaydenAdams/HJ9jLsfTz?type=view">
                         Uniswap V1 Whitepaper
                     </a>

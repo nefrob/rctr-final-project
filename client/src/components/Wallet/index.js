@@ -33,7 +33,7 @@ const Wallet = () => {
             return;
         }
 
-        console.log("Getting token balances");
+        console.log("Refreshing token balances");
 
         setGetttingBalances(true);
         const ethBalance = await window.web3.eth.getBalance(

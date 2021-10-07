@@ -12,66 +12,24 @@ import Swap from "../Swap";
 import Liquidity from "../Liquidity";
 import Wallet from "../Wallet";
 
-import tokenLogo from "../../assets/img/erc20.png";
-
+import appReducer from "./reducer";
 import { getWeb3, getContract, fromWei } from "../../utils/utils";
+
+import tokenLogo from "../../assets/img/erc20.png";
 
 import "./styles.css";
 
 export const AppContext = createContext();
 
 const App = () => {
-    const appReducer = (state, action) => {
-        switch (action.type) {
-            case "SET_FACTORY":
-                return { ...state, factory: action.payload };
-            case "ADD_TOKEN":
-                return {
-                    ...state,
-                    tokens: {
-                        ...state.tokens,
-                        ...action.payload,
-                    },
-                };
-            case "ADD_EXCHANGE":
-                return {
-                    ...state,
-                    exchanges: {
-                        ...state.exchanges,
-                        [action.payload.token]: action.payload.contract,
-                    },
-                };
-            case "SET_ACCOUNT":
-                return { ...state, account: action.payload };
-            case "SET_ETH_BALANCE":
-                return {
-                    ...state,
-                    account: { ...state.account, balance: action.payload },
-                };
-            case "SET_TOKEN_BALANCE":
-                return {
-                    ...state,
-                    tokens: {
-                        ...state.tokens,
-                        [action.payload.symbol]: {
-                            ...state.tokens[action.payload.symbol],
-                            balance: action.payload.balance,
-                        },
-                    },
-                };
-            default:
-                return state;
-        }
-    };
-
-    const [loading, setLoading] = useState(true);
-
     const [state, dispatch] = useReducer(appReducer, {
         factory: null,
         tokens: {},
         exchanges: {},
         account: { address: "0x0", balance: 0 },
     });
+
+    const [loading, setLoading] = useState(true);
 
     const handleAccountsChanged = async (accounts) => {
         if (accounts.length === 0) {
@@ -128,7 +86,7 @@ const App = () => {
 
     const handleDisconnect = (error) => {
         console.error(error);
-        alert("MetaMask disconnect from network.");
+        alert("MetaMask disconnected from network.");
         window.location.reload();
     };
 
@@ -217,7 +175,7 @@ const App = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading web3, accounts, and contract...</div>;
+        return <div>Loading web3, accounts, and contracts...</div>;
     }
 
     return (

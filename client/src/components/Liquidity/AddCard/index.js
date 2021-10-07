@@ -49,24 +49,7 @@ const AddCard = () => {
                     from: state.account.address,
                 });
 
-            const ethBalance = await window.web3.eth.getBalance(
-                state.account.address
-            );
-            dispatch({ type: "SET_ETH_BALANCE", payload: fromWei(ethBalance) });
-
-            const tokenBalance = await state.tokens[
-                chosenToken
-            ].contract.methods
-                .balanceOf(state.account.address)
-                .call();
-
-            dispatch({
-                type: "SET_TOKEN_BALANCE",
-                payload: {
-                    symbol: chosenToken,
-                    balance: fromWei(tokenBalance),
-                },
-            });
+            await updateBalances();
         } catch (error) {
             console.error(error);
         }
@@ -76,6 +59,25 @@ const AddCard = () => {
 
         setInProgress(false);
         setChosenToken("");
+    };
+
+    const updateBalances = async () => {
+        const ethBalance = await window.web3.eth.getBalance(
+            state.account.address
+        );
+        dispatch({ type: "SET_ETH_BALANCE", payload: fromWei(ethBalance) });
+
+        const tokenBalance = await state.tokens[chosenToken].contract.methods
+            .balanceOf(state.account.address)
+            .call();
+
+        dispatch({
+            type: "SET_TOKEN_BALANCE",
+            payload: {
+                symbol: chosenToken,
+                balance: fromWei(tokenBalance),
+            },
+        });
     };
 
     const handleTokenPick = (e) => {
