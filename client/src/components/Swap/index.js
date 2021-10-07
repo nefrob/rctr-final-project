@@ -46,14 +46,20 @@ const Swap = () => {
 
         try {
             if (chosenFrom === "ETH") {
+                const amountToExact = await state.exchanges[chosenTo].methods
+                    .getEthToTokenExchangeRate(toWei(amountFrom))
+                    .call();
+
                 await state.exchanges[chosenTo].methods
-                    .ethToTokenExchange(toWei(amountTo))
+                    .ethToTokenExchange(amountToExact)
                     .send({
                         value: toWei(amountFrom),
                         from: state.account.address,
                     });
             } else if (chosenTo === "ETH") {
-                console.log(amountTo);
+                const amountToExact = await state.exchanges[chosenFrom].methods
+                    .getTokenToEthExchangeRate(toWei(amountFrom))
+                    .call();
 
                 await state.tokens[chosenFrom].contract.methods
                     .approve(
@@ -63,11 +69,15 @@ const Swap = () => {
                     .send({ from: state.account.address });
 
                 await state.exchanges[chosenFrom].methods
-                    .tokenToEthExchange(toWei(amountFrom), toWei(amountTo))
+                    .tokenToEthExchange(toWei(amountFrom), amountToExact)
                     .send({
                         from: state.account.address,
                     });
             } else {
+                const amountToExact = await state.exchanges[chosenFrom].methods
+                    .getTokenToEthExchangeRate(toWei(amountFrom))
+                    .call();
+
                 await state.tokens[chosenFrom].contract.methods
                     .approve(
                         state.exchanges[chosenFrom]._address,
@@ -78,7 +88,7 @@ const Swap = () => {
                 await state.exchanges[chosenFrom].methods
                     .tokenToTokenExchange(
                         toWei(amountFrom),
-                        toWei(amountTo),
+                        amountToExact,
                         state.tokens[chosenTo].contract._address
                     )
                     .send({
@@ -87,6 +97,7 @@ const Swap = () => {
             }
 
             await updateBalances(); // fixme: need to do this?
+            setExchangeRate(await getExchangeRate(chosenFrom, chosenTo));
         } catch (error) {
             console.log(error);
         }
@@ -97,7 +108,7 @@ const Swap = () => {
     };
 
     const updateBalances = async () => {
-        const ethBalance = await state.web3.eth.getBalance(
+        const ethBalance = await window.web3.eth.getBalance(
             state.account.address
         );
         dispatch({
@@ -247,50 +258,52 @@ const Swap = () => {
 
         try {
             if (from === "ETH" && to !== "choose") {
-                rate = fromWei(
-                    await state.exchanges[to].methods
-                        .getEthToTokenExchangeRate(toWei(1))
-                        .call()
-                );
+                rate = await state.exchanges[to].methods
+                    .getEthToTokenExchangeRate(toWei(1))
+                    .call();
             } else if (from !== "choose" && to === "ETH") {
-                rate = fromWei(
-                    await state.exchanges[from].methods
-                        .getTokenToEthExchangeRate(toWei(1))
-                        .call()
-                );
+                rate = await state.exchanges[from].methods
+                    .getTokenToEthExchangeRate(toWei(1))
+                    .call();
             } else if (from !== "choose" && to !== "choose") {
                 const tokenToEth = await state.exchanges[from].methods
                     .getTokenToEthExchangeRate(toWei(1))
                     .call();
-                rate = fromWei(
-                    await state.exchanges[to].methods
-                        .getEthToTokenExchangeRate(tokenToEth)
-                        .call()
-                );
+                rate = await state.exchanges[to].methods
+                    .getEthToTokenExchangeRate(tokenToEth)
+                    .call();
             }
         } catch (error) {
             console.log(error);
         }
 
-        return rate;
+        return fromWei(rate);
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
+
+        if (value === "") {
+            setAmountFrom("");
+            setAmountTo("");
+            return;
+        }
+
+        // Fixme: incorrect conversion still slightly
+        const valFixed = parseFloat(value).toFixed(18);
+        const rateFixed = parseFloat(exchangeRate).toFixed(18);
 
         if (name === "amountFrom") {
             setAmountFrom(value);
 
-            // fixme: lost value by truncating to 10 decimals
-            // should do all math with 18 fixed decimal places
             if (exchangeRate !== 0) {
-                setAmountTo(parseFloat(value * exchangeRate).toFixed(6));
+                setAmountTo(valFixed * rateFixed);
             }
         } else if (name === "amountTo") {
             setAmountTo(value);
 
             if (exchangeRate !== 0) {
-                setAmountFrom(parseFloat(value / exchangeRate).toFixed(6));
+                setAmountFrom(valFixed / rateFixed);
             }
         }
     };
@@ -337,7 +350,7 @@ const Swap = () => {
                                 onChange={handleInputChange}
                             />
                             <Form.Text className="text-muted">
-                                ~$<samp>{pricesUSD.from * amountFrom}</samp>
+                                {/* ~$<samp>{pricesUSD.from * amountFrom}</samp> */}
                             </Form.Text>
                         </Form.Group>
                         <Form.Label>To:</Form.Label>
