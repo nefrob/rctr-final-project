@@ -147,6 +147,13 @@ const AddCard = () => {
                         <Form.Text className="text-muted">
                             Pool size: <samp>{poolSize.eth}</samp> ETH :{" "}
                             <samp>{poolSize.tokens}</samp> Tokens
+                            <br />
+                            Address:{" "}
+                            <code>
+                                {chosenToken !== ""
+                                    ? state.exchanges[chosenToken]._address
+                                    : "0x0"}
+                            </code>
                         </Form.Text>
                     </Form.Group>
                     <Button
