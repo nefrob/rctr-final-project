@@ -1,0 +1,19 @@
+.App {
+    padding-top: 55px;
+    margin: auto;
+    width: 900px;
+    max-width: 90%;
+}
+
+.number-form {
+    font-family: monospace;
+}
+
+.token-logo {
+    width: 40px;
+    height: 40px;
+}
+
+td {
+    vertical-align: middle;
+}
