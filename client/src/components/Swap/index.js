@@ -318,93 +318,103 @@ const Swap = () => {
 
     return (
         <div className="Swap">
-            <Card>
-                <Card.Header>Swap</Card.Header>
-                <Card.Body>
-                    <Card.Title>
-                        Exchange ETH/Tokens or Tokens/Tokens:
-                    </Card.Title>
-                    <Form>
-                        <Form.Label>From:</Form.Label>
-                        <Form.Select
+            {state.account.address === "0x0" ? (
+                <Alert variant="warning">
+                    You must connect a wallet before using this feature.
+                </Alert>
+            ) : (
+                <Card>
+                    <Card.Header>Swap</Card.Header>
+                    <Card.Body>
+                        <Card.Title>
+                            Exchange ETH/Tokens or Tokens/Tokens:
+                        </Card.Title>
+                        <Form>
+                            <Form.Label>From:</Form.Label>
+                            <Form.Select
+                                className="mb-2"
+                                name="chosenFrom"
+                                value={chosenFrom}
+                                onChange={handleSelectionChange}
+                                disabled={inProgress}
+                            >
+                                <option value="choose" hidden>
+                                    Select swap from
+                                </option>
+                                <option value="ETH">ETH</option>
+                                {tokenOptions}
+                            </Form.Select>
+                            <Form.Group className="mb-2">
+                                <Form.Control
+                                    className="number-form"
+                                    name="amountFrom"
+                                    type="number"
+                                    placeholder="0"
+                                    value={amountFrom}
+                                    disabled={
+                                        inProgress || chosenFrom === "choose"
+                                    }
+                                    onChange={handleInputChange}
+                                />
+                                <Form.Text className="text-muted">
+                                    {/* ~$<samp>{pricesUSD.from * amountFrom}</samp> */}
+                                </Form.Text>
+                            </Form.Group>
+                            <Form.Label>To:</Form.Label>
+                            <Form.Select
+                                className="mb-2"
+                                name="chosenTo"
+                                value={chosenTo}
+                                onChange={handleSelectionChange}
+                                disabled={inProgress}
+                            >
+                                <option value="choose" hidden>
+                                    Select swap to
+                                </option>
+                                <option value="ETH">ETH</option>
+                                {tokenOptions}
+                            </Form.Select>
+                            <Form.Group className="mb-2">
+                                <Form.Control
+                                    className="number-form"
+                                    name="amountTo"
+                                    type="number"
+                                    placeholder="0"
+                                    value={amountTo}
+                                    disabled={
+                                        inProgress || chosenTo === "choose"
+                                    }
+                                    onChange={handleInputChange}
+                                />
+                                <Form.Text className="text-muted">
+                                    ~$<samp>{pricesUSD.to * amountTo}</samp>
+                                </Form.Text>
+                            </Form.Group>
+                        </Form>
+                        <Button
                             className="mb-2"
-                            name="chosenFrom"
-                            value={chosenFrom}
-                            onChange={handleSelectionChange}
-                            disabled={inProgress}
+                            variant="primary"
+                            type="submit"
+                            onClick={handleSubmit}
+                            disabled={
+                                inProgress ||
+                                chosenFrom === "choose" ||
+                                chosenTo === "choose" ||
+                                amountFrom === 0 ||
+                                exchangeRate === 0
+                            }
                         >
-                            <option value="choose" hidden>
-                                Select swap from
-                            </option>
-                            <option value="ETH">ETH</option>
-                            {tokenOptions}
-                        </Form.Select>
-                        <Form.Group className="mb-2">
-                            <Form.Control
-                                className="number-form"
-                                name="amountFrom"
-                                type="number"
-                                placeholder="0"
-                                value={amountFrom}
-                                disabled={inProgress || chosenFrom === "choose"}
-                                onChange={handleInputChange}
-                            />
-                            <Form.Text className="text-muted">
-                                {/* ~$<samp>{pricesUSD.from * amountFrom}</samp> */}
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Label>To:</Form.Label>
-                        <Form.Select
-                            className="mb-2"
-                            name="chosenTo"
-                            value={chosenTo}
-                            onChange={handleSelectionChange}
-                            disabled={inProgress}
-                        >
-                            <option value="choose" hidden>
-                                Select swap to
-                            </option>
-                            <option value="ETH">ETH</option>
-                            {tokenOptions}
-                        </Form.Select>
-                        <Form.Group className="mb-2">
-                            <Form.Control
-                                className="number-form"
-                                name="amountTo"
-                                type="number"
-                                placeholder="0"
-                                value={amountTo}
-                                disabled={inProgress || chosenTo === "choose"}
-                                onChange={handleInputChange}
-                            />
-                            <Form.Text className="text-muted">
-                                ~$<samp>{pricesUSD.to * amountTo}</samp>
-                            </Form.Text>
-                        </Form.Group>
-                    </Form>
-                    <Button
-                        className="mb-2"
-                        variant="primary"
-                        type="submit"
-                        onClick={handleSubmit}
-                        disabled={
-                            inProgress ||
-                            chosenFrom === "choose" ||
-                            chosenTo === "choose" ||
-                            amountFrom === 0 ||
-                            exchangeRate === 0
-                        }
-                    >
-                        Swap
-                    </Button>
-                    {exchangeRate === 0 ? (
-                        <Alert variant="warning">
-                            One or more of the liquidity pools is empty or
-                            unselected.
-                        </Alert>
-                    ) : null}
-                </Card.Body>
-            </Card>
+                            Swap
+                        </Button>
+                        {exchangeRate === 0 ? (
+                            <Alert variant="warning">
+                                One or more of the liquidity pools is empty or
+                                unselected.
+                            </Alert>
+                        ) : null}
+                    </Card.Body>
+                </Card>
+            )}
         </div>
     );
 };
