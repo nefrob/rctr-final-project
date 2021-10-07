@@ -2,26 +2,19 @@
 
 ## Project Description
 
-A [Uniswap V1](https://github.com/Uniswap/uniswap-v1) clone for decentralized automated token exchange on Ethereum. React frontent links to smart contracts on the local Ethereum blockchain to allow for providing liquidity and swapping `ETH`/tokens.
+A [Uniswap V1](https://github.com/Uniswap/uniswap-v1) clone for decentralized token exchange via automated market maker on Ethereum. React frontent links to smart contracts on the local Ethereum blockchain to allow for providing/removing liquidity and swapping `ETH`/tokens via browser wallet.
 
-<!-- Use this section to describe your final project and perhaps any links to relevant sites that help convey the concept and\or functionality. -->
-
-TODO: [CodeSandbox Link]() to be added for frontend when completed.
-
-Disclaimer: static, i.e. can't add new tokens/exchanges on frontend
+This project was completed to gain an understanding in writing/testing/deploying smart contracts, and interacting with them from a DApp. The frontent is not intended to be fully functional but rather to provide minimal functionality to allow for usage of the smart contracts.
 
 ## Setup
-
-TODO: update as project proceeds.
 
 -   Clone the project:
 
     ```
-    git clone https://github.com/nefrob/rctr-final-project.git
-    cd rctr-final-project
+    git clone hhttps://github.com/nefrob/sandman-swap && cd sandman-swap
     ```
 
--   Install dependencies:
+-   Install smart contract dependencies:
 
     ```
     npm install
@@ -53,11 +46,32 @@ TODO: update as project proceeds.
     npm start
     ```
 
--   Note: MetaMask ganache account will need to be reset every time ganache is restarted to clear the old test transaction history.
+-   Note: MetaMask `ganache` account will need to be reset every time `ganache` is restarted to clear the old test transaction history.
+
+## Test
+
+Unit tests are currently written for the smart contracts in this project (not the frontend components).
+
+To run the tests from the project root directory do: `npm test`.
 
 ## Design
 
-#### Wireframes
+#### MVP
+
+-   ~~Home page~~
+-   ~~Swap page~~
+-   ~~Liquidity pool page~~
+-   ~~Wallet page with currennt ETH balance and a button to connect to a wallet~~
+
+#### PostMVP
+
+-   ~~ETH/token exchange prices in USD (use API)~~
+-   ~~Integration with MetaMask~~
+-   ~~Add new token to wallet functionality~~
+-   Integration with Ethereum testnet
+    -   Setup frontend on CodeSandBox
+
+#### Initial Wireframes
 
 -   `/home`:
 
@@ -67,37 +81,34 @@ TODO: update as project proceeds.
 
     <img src="design/WireFrameWallet.png" alt="Wallet" width="550px" />
 
-[Uniswap V1](https://app.uniswap.org/#/swap) page for reference.
+    ([Uniswap V1](https://app.uniswap.org/#/swap) page for reference)
 
 #### Components
 
-TODO: expand as app progresses.
+| Component  |                                 Description                                 |
+| ---------- | :-------------------------------------------------------------------------: |
+| App        |                       Page routing, user state setup                        |
+| Home       |                       Landing page with project info                        |
+| Navigation |                        Page routing, display header                         |
+| Swap       |                    Swapping eth/tokens for active pools                     |
+| LP         |                            Add/remove liquidity                             |
+| Wallet     | Setup MetaMask connection, display current holdings, add tokens to MetaMask |
 
-| Component  |       Description        |
-| ---------- | :----------------------: |
-| App        |          Setup           |
-| Home       |       Landing page       |
-| Navigation |      Render header       |
-| Swap       |     Swapping tokens      |
-| LP         |   Add/remove liquidity   |
-| Wallet     | Display current holdings |
+## Resources
 
-#### MVP
+#### Dependencies
 
--   Home page
--   Swap page
--   ~~Liquidity pool page~~
--   ~~Wallet page with currennt ETH balance and a button to connect to a wallet~~
+-   `web3.js` for interaction with ethereum nodes.
+-   `truffle` for testing and deployment of contracts.
+-   `ganache` for local Ethereum blockchain testing.
+-   `@openzeppelin/contracts` for ERC standards and smart contract libraries.
+-   `react-boostrap` for styling.
 
-#### PostMVP
+#### Browser Wallet
 
--   ETH/token exchange prices in USD (use API)
--   ~~Integration with MetaMask~~
--   ~~Add new token to wallet functionality~~
--   Integration with Ethereum testnet
-    -   Integration with Codesandbox
+MetaMask is a browser extension that allows you to interact with the Ethereum blockchain on decentralized applications. See [MetaMask Docs](https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider) for more information.
 
-## API
+#### API
 
 To make swap prices easier to understand, the current `ETH` value in `USD` will be fetched from [CEX Rest API](https://cex.io/rest-api).
 
@@ -111,24 +122,6 @@ Example request: `https://cex.io/api/last_price/ETH/USD` returns:
 }
 ```
 
-## Additional Libraries
+## Questions?
 
--   `web3.js` for interaction with ethereum nodes.
--   `truffle` for testing and deployment of contracts.
--   `ganache` for local Ethereum blockchain testing.
--   `@openzeppelin/contracts` for ERC standards and smart contract libraries.
--   `react-boostrap` for styling.
-
-## Other
-
-TODO:
-
-<!-- #### Code Snippet
-
-Use this section to include a brief code snippet of functionality that you are proud of an a brief description. Code snippet should not be greater than 10 lines of code.
-
-```
-function reverse(string) {
-	// here is the code to reverse a string of text
-}
-``` -->
+-   Post issues in the [Issue Tracker](https://github.com/jkeohan/rctr-final-project/issues).
