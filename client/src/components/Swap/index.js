@@ -42,6 +42,8 @@ const Swap = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (amountFrom === 0 || amountFrom === "") return;
+
         setInProgress(true);
 
         try {
@@ -401,6 +403,7 @@ const Swap = () => {
                                 chosenFrom === "choose" ||
                                 chosenTo === "choose" ||
                                 amountFrom === 0 ||
+                                amountFrom === "" ||
                                 exchangeRate === 0
                             }
                         >
