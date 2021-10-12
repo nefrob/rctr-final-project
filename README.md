@@ -1,4 +1,4 @@
-# Simple Swap
+# Sandman Swap
 
 ## Project Description
 
@@ -93,6 +93,10 @@ To run the tests from the project root directory do: `npm test`.
 | Swap       |                    Swapping eth/tokens for active pools                     |
 | LP         |                            Add/remove liquidity                             |
 | Wallet     | Setup MetaMask connection, display current holdings, add tokens to MetaMask |
+
+#### Sandman
+
+This project is themed around Dream of the Endless (aka Sandman) for fun!
 
 ## Resources
 
