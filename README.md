@@ -2,9 +2,9 @@
 
 ## Project Description
 
-A [Uniswap V1](https://github.com/Uniswap/uniswap-v1) clone for decentralized token exchange via automated market maker on Ethereum. React frontent links to smart contracts on the local Ethereum blockchain to allow for providing/removing liquidity and swapping `ETH`/tokens via browser wallet.
+A [Uniswap V1](https://github.com/Uniswap/uniswap-v1) clone for decentralized ERC20 token exchange via automated market maker on Ethereum. React frontend links to smart contracts on the local Ethereum blockchain to allow for providing/removing liquidity and swapping `ETH`/tokens via browser wallet.
 
-This project was completed to gain an understanding in writing/testing/deploying smart contracts, and interacting with them from a DApp. The frontent is not intended to be fully functional but rather to provide minimal functionality to allow for usage of the smart contracts.
+This project was completed to gain an understanding in writing/testing/deploying smart contracts, and interacting with them from a DApp. The frontend is not intended to be fully functional but rather to provide minimal functionality to allow for usage of the smart contracts.
 
 ## Setup
 
