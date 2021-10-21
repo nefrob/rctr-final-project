@@ -1,12 +1,9 @@
-var HelloContract = artifacts.require("./HelloContract.sol");
 var Factory = artifacts.require("./Factory.sol");
 // var Exchange = artifacts.require("./Exchange.sol");
 var SampleToken1 = artifacts.require("./SampleToken1.sol");
 var SampleToken2 = artifacts.require("./SampleToken2.sol");
 
 module.exports = async function (deployer, network, accounts) {
-    deployer.deploy(HelloContract);
-
     await deployer.deploy(Factory);
     const factoryInstance = await Factory.deployed();
 
