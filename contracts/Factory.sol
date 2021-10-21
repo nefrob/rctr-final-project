@@ -7,7 +7,7 @@ import "./Exchange.sol";
 contract Factory is IFactory {
     event LogCreateExchange(address indexed token, address indexed exchange);
 
-    mapping(address => address) public tokenToExchange;
+    mapping(address => address) private tokenToExchange;
 
     function createExchange(address tokenAddress)
         public

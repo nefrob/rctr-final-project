@@ -1,4 +1,5 @@
-var assert = require("assert");
+const assert = require("assert");
+const truffleAssert = require("truffle-assertions");
 
 const SampleToken1 = artifacts.require("./SampleToken1.sol");
 
@@ -18,11 +19,9 @@ contract("SampleToken1", (accounts) => {
     });
 
     it("Correct total supply", async () => {
-        const totalSupply = await sampleToken1.totalSupply();
-        assert.equal(totalSupply, 100);
-
-        const balance = await sampleToken1.balanceOf(accounts[0]);
-        assert.equal(balance, 100);
+        assert.equal(await sampleToken1.totalSupply(), 100);
+        assert.equal(await sampleToken1.balanceOf(accounts[0]), 100);
+        assert.equal(await sampleToken1.balanceOf(accounts[1]), 0);
     });
 
     it("Transfer the correct amount", async () => {
@@ -32,11 +31,6 @@ contract("SampleToken1", (accounts) => {
     });
 
     it("Error trying to transfer more than balance", async () => {
-        try {
-            await sampleToken1.transfer(accounts[1], 101);
-            assert.fail();
-        } catch (err) {
-            assert.ok(err.message);
-        }
+        await truffleAssert.reverts(sampleToken1.transfer(accounts[1], 101));
     });
 });
